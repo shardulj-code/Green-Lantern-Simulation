@@ -1,0 +1,1028 @@
+Build a polished, working browser-based Green Lantern-inspired webcam game from the attached reference sheet.
+
+IMPORTANT: The attached reference sheet is a VISUAL REFERENCE SOURCE, not a single image that should simply be displayed on screen.
+
+You must identify and separate the individual construct designs from the sheet and use each one independently.
+
+The goal is a real interactive webcam game, not a static UI mockup.
+
+==================================================
+CORE CONCEPT
+
+Create a browser-based real-time webcam game where the user's hand controls a Green Lantern-inspired power ring and energy constructs.
+
+The experience should feel like:
+
+REAL WEBCAM
++
+HAND TRACKING
++
+RING EQUIP
++
+FINGER-BASED CONSTRUCT SELECTION
++
+INDIVIDUAL CONSTRUCT ASSETS
++
+REAL-TIME ANIMATION
++
+GREEN ENERGY EFFECTS
++
+BATTERY SYSTEM
++
+FACE/BODY SUIT MODE
++
+POLISHED HUD
+
+It must be functional, not merely visually impressive.
+
+==================================================
+REFERENCE SHEET — VERY IMPORTANT
+
+I am providing a reference sheet containing the desired construct designs.
+
+DO NOT:
+
+- display the entire sheet as one image
+- use the sheet as a giant sprite
+- show the labels from the sheet inside the game
+- use the same image for every construct
+- make every construct a generic green glow
+- simply resize the entire reference sheet
+- invent completely unrelated construct designs
+
+Instead:
+
+1. Inspect the reference sheet.
+2. Identify each individual construct.
+3. Determine its approximate bounding region.
+4. Separate each construct conceptually into its own asset.
+5. Use each construct independently in the game.
+
+The 12 constructs are:
+
+1. SHIELD
+2. ENERGY BURST
+3. BAT
+4. HAMMER
+5. SWORD
+6. WALL
+7. CANNON
+8. DRILL
+9. GRAPPLE
+10. CAGE
+11. JET
+12. GIANT FIST
+
+The reference sheet should establish their:
+
+- silhouette
+- proportions
+- general geometry
+- visual language
+- emerald energy appearance
+- overall style
+
+You may clean up, isolate, recolor, crop, remove backgrounds, or reconstruct parts of the assets when necessary.
+
+The final game must treat these as 12 SEPARATE construct objects.
+
+==================================================
+ASSET PIPELINE
+
+If the environment allows asset extraction:
+
+Create:
+
+constructs/
+shield
+energy-burst
+bat
+hammer
+sword
+wall
+cannon
+drill
+grapple
+cage
+jet
+giant-fist
+
+Each must have its own asset.
+
+Prefer:
+
+- transparent PNG/WebP
+- clean isolated object
+- generous transparent padding
+- no labels
+- no UI
+- no reference-sheet background
+- no person
+- no menu
+- no other construct
+
+If automatic extraction from the reference sheet is unreliable, recreate the shapes using Canvas/SVG/vector geometry while following the reference sheet.
+
+DO NOT abandon the reference design and replace everything with generic icons.
+
+==================================================
+WEBCAM
+
+The game must use the REAL physical webcam.
+
+Do NOT simulate the camera.
+
+Do NOT use a fake prerecorded video.
+
+Do NOT use a placeholder image.
+
+If using browser JavaScript:
+
+navigator.mediaDevices.getUserMedia()
+
+is acceptable.
+
+If the platform supports a backend camera architecture, that is also acceptable.
+
+But there must be only ONE physical webcam owner.
+
+Do not have Python/OpenCV and browser getUserMedia fighting over the same camera.
+
+The user must be able to SEE THEMSELVES clearly.
+
+Camera requirements:
+
+- mirrored preview
+- full usable camera area
+- smooth video
+- construct overlays above the camera
+- camera must remain visible underneath
+- no giant opaque green overlay
+
+==================================================
+HAND TRACKING
+
+Use browser-compatible hand tracking if possible.
+
+MediaPipe Hands or an equivalent reliable real-time hand landmark system is acceptable.
+
+Track:
+
+- palm
+- wrist
+- thumb
+- index finger
+- middle finger
+- ring finger
+- pinky
+
+The system must distinguish:
+
+OPEN HAND
+CLOSED FIST
+INDEX-FINGER SELECTION
+
+Do not require perfect gestures.
+
+Add reasonable tolerance.
+
+==================================================
+RING EQUIP
+
+Gesture:
+
+1. Close fist.
+2. Bring fist toward the camera.
+3. Detect that the fist is sufficiently close.
+4. Equip the ring.
+
+The ring should visually attach to the tracked finger/hand.
+
+The ring should:
+
+- glow emerald green
+- follow hand movement
+- remain correctly positioned
+- scale based on hand size
+- have a short equip animation
+- play an equip sound
+
+Every successful ring equip should display:
+
+SECTOR 2814
+EARTH
+
+in the bottom-right.
+
+==================================================
+CONSTRUCT MENU
+
+After ring activation, show a top construct menu containing all 12 constructs.
+
+Example:
+
+SHIELD | ENERGY BURST | BAT | HAMMER | SWORD | WALL
+CANNON | DRILL | GRAPPLE | CAGE | JET | GIANT FIST
+
+Use actual individual construct thumbnails/assets.
+
+DO NOT use the full reference sheet as the menu image.
+
+The menu must work on:
+
+desktop
+laptop
+tablet
+different browser sizes
+
+Use responsive layout.
+
+If necessary, use:
+
+6 + 6
+
+on narrower screens.
+
+==================================================
+FINGER SELECTION
+
+After the ring is equipped:
+
+The INDEX FINGER selects constructs.
+
+Do NOT make the user place the whole palm precisely over a tiny button.
+
+Use the fingertip position.
+
+Calculate selection using the actual DOM element bounds:
+
+getBoundingClientRect()
+
+Convert camera coordinates into screen coordinates correctly.
+
+The hitboxes should be forgiving.
+
+Add approximately:
+
+10–20 px horizontal padding
+8–16 px vertical padding
+
+Use a short dwell:
+
+~250–400 ms
+
+before confirming selection.
+
+Show a subtle progress ring/bar while hovering.
+
+The user should immediately understand:
+
+"My finger is currently selecting SWORD."
+
+==================================================
+SECOND ROW FIX
+
+The second row MUST be just as easy to select as the first row.
+
+Do NOT hardcode:
+
+if y < somePixelValue
+
+because that will break on different screens.
+
+Instead:
+
+for each construct button:
+
+rect = button.getBoundingClientRect()
+
+check whether:
+
+fingerX >= rect.left - padding
+fingerX <= rect.right + padding
+fingerY >= rect.top - padding
+fingerY <= rect.bottom + padding
+
+This must work regardless of viewport size.
+
+==================================================
+CONSTRUCT ACTIVATION
+
+Once the user selects a construct:
+
+The selected construct should:
+
+1. appear near the tracked hand/body
+2. form/assemble
+3. animate
+4. remain active
+5. disappear when the fist opens
+6. disappear immediately when another construct is selected
+
+Do NOT simply swap a static image.
+
+Each construct needs a distinct animation.
+
+==================================================
+12 DISTINCT CONSTRUCTS
+
+SHIELD:
+
+Large circular/hexagonal defensive shield.
+
+Animation:
+
+- forms outward
+- rotating outer ring
+- pulsing core
+- subtle particles
+
+Maximum size:
+~85% of body width.
+
+---
+
+ENERGY BURST:
+
+Compact energy projectile/burst.
+
+Animation:
+
+- forms at hand
+- expands rapidly
+- energy rays shoot outward
+- particles disperse
+
+Maximum size:
+~30% body width.
+
+---
+
+BAT:
+
+Clearly recognizable bat silhouette.
+
+Animation:
+
+- forms from handle
+- slight swing motion
+- energy trail
+
+Maximum size:
+~55% body width.
+
+---
+
+HAMMER:
+
+Clearly recognizable large hammer.
+
+Animation:
+
+- head assembles
+- handle forms
+- subtle energy pulse
+- slight movement
+
+Maximum size:
+~48% body width.
+
+---
+
+SWORD:
+
+Long recognizable energy sword.
+
+Animation:
+
+- blade extends from handle
+- edge illuminates
+- energy travels toward tip
+
+Maximum size:
+~72% body height.
+
+---
+
+WALL:
+
+Large defensive energy wall.
+
+Animation:
+
+- rises from the ground/hand
+- internal geometry activates
+- energy moves through its structure
+
+Maximum size:
+~90% body width.
+
+Do NOT make it a generic green rectangle.
+
+---
+
+CANNON:
+
+Distinct energy cannon.
+
+Animation:
+
+- components assemble
+- barrel charges
+- muzzle glows
+
+Maximum size:
+~48% body width.
+
+---
+
+DRILL:
+
+Clearly recognizable drill.
+
+Animation:
+
+- drill rotates
+- energy spirals
+- particles follow rotation
+
+Maximum size:
+~40% body height.
+
+---
+
+GRAPPLE:
+
+Launcher + energy cable + hook.
+
+Animation:
+
+- launcher forms
+- hook launches
+- cable extends
+- retract animation
+
+Maximum size:
+~65% body width.
+
+---
+
+CAGE:
+
+Energy cage.
+
+Animation:
+
+- vertical bars form
+- horizontal rings activate
+- cage expands around target
+
+Maximum size:
+~95% body width.
+
+---
+
+JET:
+
+Small futuristic energy jet/thruster.
+
+Animation:
+
+- forms near hand
+- engine activates
+- green exhaust particles
+- subtle hover
+
+Maximum size:
+~45% body height.
+
+---
+
+GIANT FIST:
+
+Clearly recognizable giant clenched fist.
+
+Must contain visible:
+
+- palm
+- four fingers
+- thumb
+
+Animation:
+
+- wrist forms
+- fingers form
+- fist closes
+- slight punch/recoil
+
+Maximum size:
+~38% body width.
+
+==================================================
+PERSON-RELATIVE SCALING
+
+This is critical.
+
+Constructs must NOT become enormous.
+
+Estimate the user's body dimensions from available body/pose landmarks.
+
+For example:
+
+bodyWidth =
+distance(leftShoulder, rightShoulder)
+
+bodyHeight =
+distance(head, hip)
+
+Then calculate:
+
+SHIELD:
+width <= bodyWidth × 0.85
+
+ENERGY BURST:
+width <= bodyWidth × 0.30
+
+BAT:
+width <= bodyWidth × 0.55
+
+HAMMER:
+width <= bodyWidth × 0.48
+
+SWORD:
+height <= bodyHeight × 0.72
+
+WALL:
+width <= bodyWidth × 0.90
+
+CANNON:
+width <= bodyWidth × 0.48
+
+DRILL:
+height <= bodyHeight × 0.40
+
+GRAPPLE:
+width <= bodyWidth × 0.65
+
+CAGE:
+width <= bodyWidth × 0.95
+
+JET:
+height <= bodyHeight × 0.45
+
+GIANT FIST:
+width <= bodyWidth × 0.38
+
+Preserve aspect ratio.
+
+Never stretch constructs.
+
+==================================================
+SAFE VIEWPORT
+
+Keep constructs inside:
+
+X = 5% → 95%
+
+Y = 10% → 84%
+
+If a construct would go outside the viewport:
+
+clamp its position.
+
+Do not let it cover the entire screen.
+
+The person must remain visible.
+
+==================================================
+CONSTRUCT ANCHORING
+
+Do not place every construct at the exact same position.
+
+Use the tracked hand as the primary anchor.
+
+Examples:
+
+SWORD:
+aligned with forearm
+
+HAMMER:
+near hand
+
+BAT:
+near hand and follow forearm rotation
+
+CANNON:
+aligned with forearm
+
+SHIELD:
+slightly in front of hand
+
+GIANT FIST:
+slightly forward from hand
+
+CAGE:
+around selected position
+
+WALL:
+slightly forward of user
+
+JET:
+near hand/body
+
+==================================================
+ANIMATION
+
+Use real animation.
+
+Prefer:
+
+requestAnimationFrame()
+
+Each construct should have:
+
+FORMATION
+IDLE
+DISMISS
+
+Use easing.
+
+Example:
+
+formationProgress =
+clamp((currentTime - spawnTime) / duration, 0, 1)
+
+Use smooth easing rather than instantly appearing.
+
+==================================================
+VISUAL LAYERING
+
+Layer order:
+
+1. REAL CAMERA
+2. subtle camera enhancement
+3. suit
+4. construct effects
+5. ring
+6. particles
+7. HUD
+8. menu
+
+The camera must remain clearly visible.
+
+DO NOT put a dark green fullscreen rectangle over the camera.
+
+DO NOT reduce camera opacity excessively.
+
+==================================================
+AUDIO
+
+Previous implementation had a major problem:
+
+The game looked interactive but produced no sound.
+
+Fix this properly.
+
+On the first click/tap/user gesture:
+
+resume AudioContext.
+
+Use procedural Web Audio sounds if external assets are unavailable.
+
+Create sounds for:
+
+- ring equip
+- construct selection
+- construct formation
+- construct active
+- construct dismissal
+- battery recharge
+- low battery
+- suit activation
+
+No copyrighted movie audio.
+
+==================================================
+BATTERY
+
+Start with:
+
+100% battery.
+
+Each construct ACTIVATION consumes one charge.
+
+Do NOT consume battery every animation frame.
+
+After:
+
+10 construct activations
+
+show:
+
+LOW BATTERY
+
+Recharge:
+
+closed fist + very close to camera.
+
+Show charging animation.
+
+Suit mode does NOT consume battery.
+
+==================================================
+SUIT MODE
+
+Create a separate suit mode using face + body tracking.
+
+Track:
+
+- face
+- eyes
+- nose
+- shoulders
+- elbows
+- wrists
+- torso
+
+Create:
+
+GREEN MASK
++
+HALF-BODY GREEN SUIT
+
+The mask should follow the face.
+
+The suit should follow body movement.
+
+Do not use a static image pasted over the entire body.
+
+The user's actual face and body should remain visible.
+
+Suit activation must have:
+
+- formation animation
+- sound
+- subtle energy effects
+
+Suit mode must NOT drain construct battery.
+
+==================================================
+RING / SUIT / CONSTRUCT SEPARATION
+
+These are separate systems:
+
+RING
+→ hand tracking
+
+CONSTRUCTS
+→ finger selection + game state
+
+SUIT
+→ face/body tracking
+
+Do not make one system dependent on another unnecessarily.
+
+==================================================
+PERFORMANCE
+
+The game must remain responsive.
+
+Do not perform expensive image generation or processing every frame.
+
+Tracking:
+
+~15–30 FPS
+
+Rendering:
+
+requestAnimationFrame()
+
+Use the latest tracking state.
+
+Avoid excessive smoothing.
+
+The previous implementation felt slow.
+
+Reduce tracking latency.
+
+Do not apply huge smoothing windows.
+
+Target:
+
+~100–200 ms perceived response
+
+for finger selection.
+
+==================================================
+DEBUG MODE
+
+Add a debug toggle.
+
+When enabled, show:
+
+- hand landmarks
+- fingertip
+- detected fist state
+- ring state
+- selected construct
+- battery
+- body bounding box
+- face landmarks
+- FPS
+
+When disabled, hide these.
+
+Do not require debug mode for normal gameplay.
+
+==================================================
+ERROR HANDLING
+
+If camera permission fails:
+
+show a clear camera permission message.
+
+If hand tracking fails:
+
+show:
+
+HAND TRACKING UNAVAILABLE
+
+If browser does not support the required API:
+
+show a clear message.
+
+Never silently show a black screen.
+
+==================================================
+RESPONSIVE UI
+
+The game must work on:
+
+desktop
+laptop
+tablet
+
+Do not hardcode everything to one 1920×1080 screen.
+
+Use:
+
+vw
+vh
+%
+clamp()
+flexbox
+CSS grid
+
+The construct bar must remain usable at different resolutions.
+
+Battery must never overlap the final construct buttons.
+
+The second row must remain clickable.
+
+==================================================
+IMPORTANT LESSONS FROM PREVIOUS BUILD
+
+The previous implementation had these problems.
+
+FIX ALL OF THEM:
+
+1. Camera sometimes appeared black.
+   → Ensure the real camera element has dimensions and is visible.
+
+2. Browser and backend both attempted webcam access.
+   → Only one physical webcam owner.
+
+3. HUD disappeared.
+   → Check z-index/layering/visibility.
+
+4. Green overlay covered the person.
+   → Camera must remain dominant.
+
+5. Finger selection was too difficult.
+   → Larger hitboxes + fingertip detection + dwell.
+
+6. Second menu row was difficult/impossible.
+   → Use getBoundingClientRect() and real coordinate conversion.
+
+7. Finger movement felt slow.
+   → Reduce excessive smoothing.
+
+8. Constructs looked almost identical.
+   → Each construct must use its own extracted/reference asset and animation.
+
+9. No construct animation.
+   → Implement formation + idle + dismissal.
+
+10. No sound.
+    → Unlock AudioContext after user gesture and implement procedural sounds.
+
+11. No suit.
+    → Implement actual face/body tracking and overlay.
+
+12. Constructs were too large.
+    → Use body-relative scaling and viewport clamping.
+
+13. Reference sheet was previously treated as one visual.
+    → THIS TIME explicitly separate every construct.
+
+14. Static images looked like stickers.
+    → Add formation, glow, particles, rotation, scale, and movement while preserving the reference silhouette.
+
+==================================================
+TECHNICAL IMPLEMENTATION
+
+Use the simplest reliable architecture supported by Grok Build.
+
+Preferred:
+
+HTML
+CSS
+JavaScript
+Canvas
+Web APIs
+MediaPipe or equivalent browser-compatible CV
+
+Avoid unnecessary dependencies.
+
+Do not create a complicated backend unless genuinely required.
+
+The project should be runnable locally.
+
+Provide:
+
+index.html
+
+and supporting files only where useful.
+
+==================================================
+FINAL TEST CHECKLIST
+
+Before saying the project is complete, verify:
+
+[ ] Camera opens
+[ ] User can see themselves
+[ ] Camera is mirrored
+[ ] Hand tracking works
+[ ] Closed fist detected
+[ ] Fist near camera equips ring
+[ ] Ring follows hand
+[ ] SECTOR 2814 / EARTH appears
+[ ] Construct menu appears
+[ ] Index finger selects components
+[ ] First row works
+[ ] Second row works
+[ ] Selection is responsive
+[ ] SHIELD looks different
+[ ] ENERGY BURST looks different
+[ ] BAT looks different
+[ ] HAMMER looks different
+[ ] SWORD looks different
+[ ] WALL looks different
+[ ] CANNON looks different
+[ ] DRILL looks different
+[ ] GRAPPLE looks different
+[ ] CAGE looks different
+[ ] JET looks different
+[ ] GIANT FIST looks different
+[ ] Constructs use the reference sheet's designs
+[ ] Constructs animate
+[ ] Constructs stay within screen
+[ ] Constructs remain proportionate to user
+[ ] Fist opening dismisses construct
+[ ] Selecting another construct replaces old one
+[ ] Battery decreases once per activation
+[ ] LOW BATTERY works after 10 activations
+[ ] Recharge gesture works
+[ ] Audio works after first user interaction
+[ ] Suit activates
+[ ] Mask follows face
+[ ] Suit follows body
+[ ] Suit does not drain battery
+[ ] No giant green overlay
+[ ] No black camera screen
+[ ] No webcam ownership conflict
+[ ] No major console errors
+[ ] No obvious UI overlap
+
+==================================================
+FINAL OUTPUT
+
+After building, report:
+
+1. What files were created/changed.
+2. How the reference sheet was separated into the 12 constructs.
+3. Where each construct asset is stored.
+4. How hand tracking works.
+5. How ring detection works.
+6. How finger selection works.
+7. How second-row selection was solved.
+8. How constructs are animated.
+9. How body-relative scaling works.
+10. How audio works.
+11. How suit tracking works.
+12. How to run the project locally.
+13. Any remaining limitation.
+
+Do not simply tell me that the UI was created.
+
+The final result must be a WORKING WEBCAM GAME.

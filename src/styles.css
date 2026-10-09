@@ -1,0 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Sora:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #04140c;
+  --color-surface: #071c12;
+  --color-fg: #e7ffef;
+  --color-muted: #8fbfa4;
+  --color-primary: #3dff8a;
+  --color-accent: #d6ff4a;
+  --color-border: #1f6b42;
+  --font-display: "Rajdhani", sans-serif;
+  --font-sans: "Sora", sans-serif;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+}
+
+.stage {
+  position: relative;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.camera {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  background: transparent;
+  z-index: 0;
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hud {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hud > * {
+  pointer-events: auto;
+}
+
+.menu-btn {
+  --p: 0;
+  position: relative;
+  display: flex;
+  min-height: 2.75rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  color: var(--color-fg);
+  border-radius: 0.7rem;
+  padding: 0.2rem 0.15rem 0.28rem;
+  backdrop-filter: blur(8px);
+}
+
+.menu-btn[data-hot="1"] {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 0 18px color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+
+.menu-btn::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background: conic-gradient(var(--color-accent) calc(var(--p) * 360deg), transparent 0);
+  opacity: 0.85;
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  pointer-events: none;
+}
+
+.menu-btn img {
+  height: 1.7rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}
